@@ -31,25 +31,29 @@
 {% endblock %}
 
 {% block body %}
-    <form action="/login" method="post" class="login-form">
-        <div class="form-group row">
-            <label for="username" class="col-sm-2 col-form-label">Username</label>
-            <div class="col-sm-10">
-                <input autocomplete="off" autofocus type="text" class="form-control" id="username" name="username" placeholder="Enter your username...">
-                <small id="usernameInfo" class="form-text text-muted">We only allow you to input valid usernames.</small>
+    <div class="login-form">
+        <h1 class="center">Login to your account to post and comment on posts</h1>
+        <hr>
+        <form action="/login" method="post">
+            <div class="form-group row">
+                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                <div class="col-sm-10">
+                    <input autocomplete="off" autofocus type="text" class="form-control" id="username" name="username" placeholder="Enter your username...">
+                    <small id="usernameInfo" class="form-text text-muted">We only allow you to input unique usernames.</small>
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <label for="password" class="col-sm-2 col-form-label">Password</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password...">
+            <div class="form-group row">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password...">
+                </div>
             </div>
-        </div>
-        {% if invalidPassword %}
-        <div class="alert alert-danger">Your password was incorrect</div>
-        {% endif %}
-        <button type="submit" class="btn btn-primary" id="log-in-button" disabled>Log in</button>
-    </form>
+            {% if invalidPassword %}
+            <div class="alert alert-danger">Your password was incorrect</div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary" id="log-in-button" data-toggle="tooltip" data-placement="bottom" title="Enter a valid username to be able to log in" disabled>Log in</button>
+        </form>
+    </div>
     <script crossorigin="anonymous" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="/static/usernameValidation.js"></script>
 {% endblock %}

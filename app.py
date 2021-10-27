@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import requests
+import re
 
 from datetime import datetime
 from functools import wraps
@@ -62,7 +63,6 @@ def login():
     if request.method == "POST":
         con = createConnection()
         cur = con.cursor()
-        print(request.form.get("username"))
         usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
         con.commit()
         con.close()
@@ -80,6 +80,16 @@ def validateUsername():
     con.commit()
     con.close()
     return jsonify(usernameMatches)
+
+@app.route("/validatePassword")
+def validatePassword():
+    password = request.args.get("p")
+    conditions = []
+    conditions.append(len(re.findall("[a-zA-z]", password)) >= 1)
+    conditions.append(len(re.findall("[0-9]", password)) >= 1)
+    conditions.append(len(password) >= 5)
+    conditions.append(password == request.args.get("rp"))
+    return jsonify(conditions)
 
 @app.errorhandler(404)
 def page_not_found():
