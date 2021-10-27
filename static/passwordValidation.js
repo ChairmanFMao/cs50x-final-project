@@ -4,20 +4,16 @@ function valid() {
     let button = document.getElementById("log-in-button");
     let allValid = true;
     let result = null;
-    $.get("/validatePassword?p=" + password.value + "&rp=" + passwordRepeat.value, function(valid) {
-        let currentValid = true;
+    $.ajax({url: "/validatePassword?p=" + password.value + "&rp=" + passwordRepeat.value, type:"get", dataType:"html", async:false, success: function(data) {
         let passwordArray = [document.getElementById("passwordLetter"), document.getElementById("passwordNumber"), document.getElementById("passwordLength"), document.getElementById("passwordsMatch")];
-        for (let i = 0; i < 4; i++) {
-            passwordArray[i].src = valid[i] ? "/static/images/tick.png" : "/static/images/cross.png";
-            currentValid = currentValid && valid[i];
+        passwordArray[0].src = data["letter"] ? "/static/images/tick.png" : "/static/images/cross.png";
+        passwordArray[1].src = data["number"] ? "/static/images/tick.png" : "/static/images/cross.png";
+        passwordArray[2].src = data["length"] ? "/static/images/tick.png" : "/static/images/cross.png";
+        passwordArray[3].src = data["match"] ? "/static/images/tick.png" : "/static/images/cross.png";
+        if (document.getElementById("termsAndConditions").checked == false) {
+            allValid = false;
         }
-        currentValid = currentValid && document.getElementById("termsAndConditions").checked;
-        function a(currentValid){
-            result =  currentValid;
-        }
-        a(currentValid);
-    });
-    console.log(result);
+    }});
     $.get("/validateUsername?q=" + username.value, function(good) {
         let currentValid = true;
         currentValid = currentValid && (good.length == 0 && username.value.length >= 4)

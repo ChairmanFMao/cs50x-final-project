@@ -84,12 +84,12 @@ def validateUsername():
 @app.route("/validatePassword")
 def validatePassword():
     password = request.args.get("p")
-    conditions = []
-    conditions.append(len(re.findall("[a-zA-z]", password)) >= 1)
-    conditions.append(len(re.findall("[0-9]", password)) >= 1)
-    conditions.append(len(password) >= 5)
-    conditions.append(password == request.args.get("rp"))
-    return jsonify(conditions)
+    return jsonify({
+        "letter" : len(re.findall("[a-zA-z]", password)) >= 1,
+        "number" : len(re.findall("[0-9]", password)) >= 1,
+        "length" : len(password) >= 5,
+        "match" : password == request.args.get("rp")
+    })
 
 @app.errorhandler(404)
 def page_not_found():
