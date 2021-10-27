@@ -1,4 +1,27 @@
 body
 {
-    background-color: white;
+    background-color: black;
+    color: white;
+}
+
+.center
+{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.navbar-custom
+{
+    background-color: #89b47c;
+}
+
+.navbar-custom .navbar-nav .nav-link
+{
+    color: white;
+}
+
+.navbar-custom .navbar-brand, .navbar-custom .navbar-text
+{
+    color: white;
 }
