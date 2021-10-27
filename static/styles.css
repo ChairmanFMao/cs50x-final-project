@@ -1,27 +1,28 @@
-body
-{
+body {
     background-color: black;
     color: white;
 }
 
-.center
-{
+.center {
     display: flex;
     justify-content: center;
     text-align: center;
 }
 
-.navbar-custom
-{
+.navbar-custom {
     background-color: #89b47c;
 }
 
-.navbar-custom .navbar-nav .nav-link
-{
+.navbar-custom .navbar-nav .nav-link {
     color: white;
 }
 
-.navbar-custom .navbar-brand, .navbar-custom .navbar-text
-{
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text{
     color: white;
+}
+
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: #659656;
 }
