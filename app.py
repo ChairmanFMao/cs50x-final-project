@@ -4,7 +4,7 @@ import requests
 
 from datetime import datetime
 from functools import wraps
-from flask import Flask, render_template, request, session, redirect, flash
+from flask import Flask, render_template, request, session, redirect, flash, jsonify
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import abort, default_exceptions, HTTPException, InternalServerError
@@ -59,7 +59,27 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    if request.method == "POST":
+        con = createConnection()
+        cur = con.cursor()
+        print(request.form.get("username"))
+        usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
+        con.commit()
+        con.close()
+        if not check_password_hash(usernameMatches[0][2], request.form.get("password")):
+            return render_template("login.html", invalidPassword=True)
+        session["user_id"] = usernameMatches[0]["id"]
+        return redirect("/")
+    return render_template("login.html", invalidPassword=False)
+
+@app.route("/validateUsername")
+def validateUsername():
+    con = createConnection()
+    cur = con.cursor()
+    usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.args.get("q"),)).fetchall()
+    con.commit()
+    con.close()
+    return jsonify(usernameMatches)
 
 @app.errorhandler(404)
 def page_not_found():

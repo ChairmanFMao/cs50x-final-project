@@ -26,3 +26,7 @@ body {
 .navbar-custom .nav-item:hover .nav-link {
     color: #659656;
 }
+
+.login-form {
+    padding: 5% 5%;
+}
