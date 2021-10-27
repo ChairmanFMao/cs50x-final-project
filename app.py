@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import requests
 
 from datetime import datetime
 from functools import wraps
@@ -25,13 +26,22 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+    # I had this as decorated() for about an hour and spent an hour debugging it ;-;
+    return decorated
 
 def createConnection():
     return sqlite3.connect("atlas.db")
 
 @app.route("/")
 def index():
+    if "user_id" not in session:
+        session["user_id"] = None
     return render_template("index.html")
 
 @app.route("/about")
@@ -39,7 +49,7 @@ def about():
     return render_template("about.html")
 
 @app.route("/post", methods=["GET", "POST"])
-
+@login_required
 def post():
     return render_template("post.html")
 
