@@ -8,6 +8,6 @@ Please only post things that are relevant to the project on this platform, don't
 
 
 Tasks:
-complete index page to show other people's posts,
+complete about page,
 complete comment system,
 complete readme.md.
