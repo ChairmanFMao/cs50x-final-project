@@ -27,7 +27,6 @@ pyperclip==1.8.2
 PyRect==0.1.4
 PyScreeze==0.1.28
 pytweening==1.0.4
-pywin32==301
 regex==2021.10.23
 requests==2.26.0
 six==1.15.0
