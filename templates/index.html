@@ -36,12 +36,21 @@
     </div>
     <div class="padFive">
         {% for post in posts %}
-            <div class="text-center card row col-sm-6 w-75" style="width: 50%; border: 1px solid black; margin: 10px 25% 10px 25%; display: block;">
-                <div class="card-body">
-                    <h2 class="card-title">{{ post[2] }}</h2>
-                    <p class="card-text" style="color: grey;">{{ post[3] }}</p>
+            <a href="/viewPost?post_id={{ post[0] }}" style="text-decoration: none;">
+                <div class="text-center card row col-sm-6 w-75" style="width: 50%; border: 1px solid black; margin: 10px 25% 10px 25%; display: block;">
+                    <div class="card-body">
+                        <h2 class="card-title" >{{ post[2] }}</h2>
+                        <p class="card-text" style="color: grey;">
+                            {% if post[3]|length > 150 %}
+                                {{ post[3][0:150] }}...
+                                <div style="color:black;">Click to read more</div>
+                            {% else %}
+                                {{ post[3] }}
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </a>
         {% endfor %}
     </div>
 {% endblock %}

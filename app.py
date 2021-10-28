@@ -69,6 +69,15 @@ def post():
         return redirect("/")
     return render_template("post.html", invalidTitle=False, invalidContent=False)
 
+@app.route("/viewPost", methods=["GET", "POST"])
+def viewPost():
+    post_id = request.args.get("post_id")
+    con = createConnection()
+    cur = con.cursor()
+    post = cur.execute("SELECT * FROM posts WHERE post_id = ?", (post_id,)).fetchall()[0]
+    con.close()
+    return render_template("viewPost.html", post=post)
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":

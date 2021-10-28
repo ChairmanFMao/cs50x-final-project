@@ -42,3 +42,11 @@ body {
 .top-image {
     margin: 10px 10px 10px 10px;
 }
+
+.card-title {
+    color: #89b47c;
+}
+
+.card-title:hover {
+    text-decoration: underline;
+}

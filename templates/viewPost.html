@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block header %}
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <a class="navbar-brand" href="/">
+            <img src="/static/images/atlaslogo.png" width="30" height="30" alt="" loading="lazy">
+            Atlas Young Enterprise
+        </a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Homepage <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/post">Post</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block body %}
+    <div class="post top-image" style="border: 1px solid black;">
+        <div class="padFive center">
+            <h1><u>{{ post[2] }}</u></h1>
+        </div>
+        <p class="center" style="font-size: 20px;">
+            {{ post[3] }}
+        </p>
+    </div>
+{% endblock %}
