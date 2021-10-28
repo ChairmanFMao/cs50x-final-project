@@ -31,7 +31,7 @@
 {% endblock %}
 
 {% block body %}
-    <div class="post top-image thinBorder">
+    <div class="post marginFiveSides thinBorder">
         <div class="padFive center">
             <h1><u>{{ post[2] }}</u></h1>
         </div>
@@ -44,10 +44,11 @@
         <form action="/viewPost?post_id={{ post[0] }}" method="post">
             <div class="form-group">
                 <label for="comment">Write a comment for the post</label>
-                <textarea class="form-control" id="comment" name="comment" row="2" placeholder="Write your comment..."></textarea>
+                <textarea class="form-control textarea-noResize" id="comment" name="comment" row="2" placeholder="Write your comment..."></textarea>
             </div>
             <button type="sumbit" class="btn btn-primary">Post your comment</button>
         </form>
+        <br>
         {% if invalidUser %}
             <div class="alert alert-danger">You are not logged in. Log in to post comments.</div>
         {% endif %}
