@@ -77,7 +77,7 @@ def register():
         
         con = createConnection()
         cur = con.cursor()
-        cur.execute("INSERT INTO users (username, hash) VALUES(?, ?)", username, generate_password_hash(password))
+        cur.execute("INSERT INTO users (username, hash) VALUES( ?, ?)", (username, generate_password_hash(password)))
         con.commit()
         con.close()
         return redirect("/login")
@@ -94,7 +94,8 @@ def login():
         con.close()
         if not check_password_hash(usernameMatches[0][2], request.form.get("password")):
             return render_template("login.html", invalidPassword=True)
-        session["user_id"] = usernameMatches[0]["id"]
+        print(usernameMatches)
+        session["user_id"] = usernameMatches[0][0]
         return redirect("/")
     return render_template("login.html", invalidPassword=False)
 
