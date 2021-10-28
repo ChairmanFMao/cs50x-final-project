@@ -1,6 +1,4 @@
 import sqlite3
-import os
-import requests
 import re
 
 from datetime import datetime, timedelta
