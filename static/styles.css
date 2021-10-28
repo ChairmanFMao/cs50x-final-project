@@ -34,3 +34,11 @@ body {
 .padFive {
     padding: 5% 5%;
 }
+
+.splash-image {
+    border-radius: 10px;
+}
+
+.top-image {
+    margin: 10px 10px 10px 10px;
+}

@@ -45,9 +45,8 @@ def index():
         session["user_id"] = None
     con = createConnection()
     cur = con.cursor()
-    posts = cur.execute("SELECT * FROM posts").fetchall()
+    posts = cur.execute("SELECT * FROM posts ORDER BY dateCreated DESC").fetchall()
     con.close()
-    print(posts)
     return render_template("index.html", posts=posts)
 
 @app.route("/about")
