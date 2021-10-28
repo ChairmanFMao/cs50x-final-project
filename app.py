@@ -94,7 +94,6 @@ def login():
         con.close()
         if not check_password_hash(usernameMatches[0][2], request.form.get("password")):
             return render_template("login.html", invalidPassword=True)
-        print(usernameMatches)
         session["user_id"] = usernameMatches[0][0]
         return redirect("/")
     return render_template("login.html", invalidPassword=False)
@@ -119,5 +118,5 @@ def validatePassword():
     })
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(e):
     return render_template("404.html"), 404
