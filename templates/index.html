@@ -31,7 +31,14 @@
 {% endblock %}
 
 {% block body %}
-    <p class="center">
-        This is the homepage!
-    </p>
+    <div class="padFive">
+        {% for post in posts %}
+            <div class="text-center card row col-sm-6 w-75" style="width: 50%; border: 1px solid black; margin: 10px 25% 10px 25%; display: block;">
+                <div class="card-body">
+                    <h2 class="card-title">{{ post[2] }}</h2>
+                    <p class="card-text" style="color: grey;">{{ post[3] }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -43,7 +43,12 @@ def createConnection():
 def index():
     if "user_id" not in session:
         session["user_id"] = None
-    return render_template("index.html")
+    con = createConnection()
+    cur = con.cursor()
+    posts = cur.execute("SELECT * FROM posts").fetchall()
+    con.close()
+    print(posts)
+    return render_template("index.html", posts=posts)
 
 @app.route("/about")
 def about():
@@ -75,7 +80,6 @@ def register():
         con = createConnection()
         cur = con.cursor()
         usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
-        con.commit()
         con.close()
         if len(username) <= 4 or len(usernameMatches) > 0:
             return render_template("register.html", invalidUsername=True, invalidPassword=False, passwordMatch=False, invalidTerms=False)
@@ -101,7 +105,6 @@ def login():
         con = createConnection()
         cur = con.cursor()
         usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
-        con.commit()
         con.close()
         if not check_password_hash(usernameMatches[0][2], request.form.get("password")):
             return render_template("login.html", invalidPassword=True)
@@ -114,7 +117,6 @@ def validateUsername():
     con = createConnection()
     cur = con.cursor()
     usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.args.get("q"),)).fetchall()
-    con.commit()
     con.close()
     return jsonify(usernameMatches)
 

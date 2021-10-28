@@ -8,8 +8,6 @@ Please only post things that are relevant to the project on this platform, don't
 
 
 Tasks:
-implement the password validation using callbacks,
-complete registration page,
 complete index page to show other people's posts,
-complete post page,
-complete readme.md
+complete comment system,
+complete readme.md.
