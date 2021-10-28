@@ -52,7 +52,18 @@ def about():
 @app.route("/post", methods=["GET", "POST"])
 @login_required
 def post():
-    return render_template("post.html")
+    if request.method == "POST":
+        if (request.form.get("postTitle") == ""):
+            return render_template("post.html", invalidTitle=True, invalidContent=False)
+        if (request.form.get("postContent") == ""):
+            return render_template("post.html", invalidTitle=False, invalidContent=True)
+        con = createConnection()
+        cur = con.cursor()
+        cur.execute("INSERT INTO posts (user_id, title, content, dateCreated) VALUES(?, ?, ?, ?)", (session["user_id"], request.form.get("postTitle"), request.form.get("postContent"), datetime.now()))
+        con.commit()
+        con.close()
+        return redirect("/")
+    return render_template("post.html", invalidTitle=False, invalidContent=False)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -77,7 +88,7 @@ def register():
         
         con = createConnection()
         cur = con.cursor()
-        cur.execute("INSERT INTO users (username, hash) VALUES( ?, ?)", (username, generate_password_hash(password)))
+        cur.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, generate_password_hash(password)))
         con.commit()
         con.close()
         return redirect("/login")
