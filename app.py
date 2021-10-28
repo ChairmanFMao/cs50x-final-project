@@ -3,13 +3,23 @@ import os
 import requests
 import re
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 from flask import Flask, render_template, request, session, redirect, flash, jsonify
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import abort, default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
+
+def createConnection():
+    return sqlite3.connect("atlas.db")
+
+def getUsername(user_id):
+    con = createConnection()
+    cur = con.cursor()
+    username = cur.execute("SELECT username FROM users WHERE id = ?", (user_id,)).fetchall()[0][0]
+    con.close()
+    return username
 
 app = Flask(__name__)
 
@@ -21,11 +31,18 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
- 
+
+app.jinja_env.filters["getUsername"] = getUsername
+
+app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_FILE_DIR"] = mkdtemp()
-app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
 Session(app)
+
+def setUserId():
+    if "user_id" not in session:
+            session["user_id"] = None
 
 def login_required(f):
     @wraps(f)
@@ -36,13 +53,9 @@ def login_required(f):
     # I had this as decorated() for about an hour and spent an hour debugging it ;-;
     return decorated
 
-def createConnection():
-    return sqlite3.connect("atlas.db")
-
 @app.route("/")
 def index():
-    if "user_id" not in session:
-        session["user_id"] = None
+    setUserId()
     con = createConnection()
     cur = con.cursor()
     posts = cur.execute("SELECT * FROM posts ORDER BY dateCreated DESC").fetchall()
@@ -51,11 +64,13 @@ def index():
 
 @app.route("/about")
 def about():
+    setUserId()
     return render_template("about.html")
 
 @app.route("/post", methods=["GET", "POST"])
 @login_required
 def post():
+    setUserId()
     if request.method == "POST":
         if (request.form.get("postTitle") == ""):
             return render_template("post.html", invalidTitle=True, invalidContent=False)
@@ -71,15 +86,34 @@ def post():
 
 @app.route("/viewPost", methods=["GET", "POST"])
 def viewPost():
+    setUserId()
     post_id = request.args.get("post_id")
     con = createConnection()
     cur = con.cursor()
     post = cur.execute("SELECT * FROM posts WHERE post_id = ?", (post_id,)).fetchall()[0]
+    comments = cur.execute("SELECT * FROM comments WHERE post_id = ? ORDER BY dateCreated DESC", (post_id,)).fetchall()
     con.close()
-    return render_template("viewPost.html", post=post)
+    if request.method == "POST":
+        commentContent = request.form.get("comment")
+        if session["user_id"] is None:
+            return render_template("viewPost.html", post=post, comments=comments, invalidUser=True, invalidComment=False)
+        if commentContent == "":
+            return render_template("viewPost.html", post=post, comments=comments, invalidUser=False, invalidComment=True)
+        con = createConnection()
+        cur = con.cursor()
+        cur.execute("INSERT INTO comments (user_id, post_id, content, dateCreated) VALUES(?, ?, ?, ?)", (session["user_id"], post_id, commentContent, datetime.now()))
+        con.commit()
+        con.close()
+    
+    con = createConnection()
+    cur = con.cursor()
+    comments = cur.execute("SELECT * FROM comments WHERE post_id = ? ORDER BY dateCreated DESC", (post_id,)).fetchall()
+    con.close()
+    return render_template("viewPost.html", post=post, comments=comments, invalidUser=False, invalidComment=False)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    setUserId()
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -109,6 +143,7 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    setUserId()
     if request.method == "POST":
         con = createConnection()
         cur = con.cursor()

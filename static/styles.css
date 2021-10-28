@@ -35,6 +35,10 @@ body {
     padding: 5% 5%;
 }
 
+.padFiveSides {
+    padding: 5px 5%;
+}
+
 .splash-image {
     border-radius: 10px;
 }
@@ -49,4 +53,12 @@ body {
 
 .card-title:hover {
     text-decoration: underline;
+}
+
+.thinBorder {
+    border: 1px solid black;
+}
+
+.tinyPad {
+    padding: 5px 5px 5px 5px;
 }

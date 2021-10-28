@@ -8,6 +8,11 @@ Please only post things that are relevant to the project on this platform, don't
 
 
 Tasks:
-complete about page,
-complete comment system,
+Handle error:
+WARNING:root:Exception raised while handling cache file 'C:\Users\PHYSIC~1\AppData\Local\Temp\tmpga6zxe06\ca063cc85377ecf36bbb312fdaf42909'
+Traceback (most recent call last):
+  File "c:\users\physicsuser\appdata\local\programs\python\python38-32\lib\site-packages\cachelib\file.py", line 228, in set
+    os.replace(tmp, filename)
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\PHYSIC~1\\AppData\\Local\\Temp\\tmpga6zxe06\\tmp5w7fs37z.__wz_cache' -> 'C:\\Users\\PHYSIC~1\\AppData\\Local\\Temp\\tmpga6zxe06\\ca063cc85377ecf36bbb312fdaf42909'
+
 complete readme.md.

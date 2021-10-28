@@ -31,12 +31,42 @@
 {% endblock %}
 
 {% block body %}
-    <div class="post top-image" style="border: 1px solid black;">
+    <div class="post top-image thinBorder">
         <div class="padFive center">
             <h1><u>{{ post[2] }}</u></h1>
         </div>
         <p class="center" style="font-size: 20px;">
             {{ post[3] }}
         </p>
+    </div>
+    <h1 class="center"><u>Comment Section</u></h1>
+    <div class="comment-box padFiveSides">
+        <form action="/viewPost?post_id={{ post[0] }}" method="post">
+            <div class="form-group">
+                <label for="comment">Write a comment for the post</label>
+                <textarea class="form-control" id="comment" name="comment" row="2" placeholder="Write your comment..."></textarea>
+            </div>
+            <button type="sumbit" class="btn btn-primary">Post your comment</button>
+        </form>
+        {% if invalidUser %}
+            <div class="alert alert-danger">You are not logged in. Log in to post comments.</div>
+        {% endif %}
+        {% if invalidComment %}
+            <div class="alert alert-danger">You didn't comment anything.</div>
+        {% endif %}
+    </div>
+    <div class="comments padFiveSides">
+        {% for comment in comments %}
+            <div class="media thinBorder tinyPad">
+                <div class="media-body">
+                    Username: <strong>{{ comment[0] | getUsername }}</strong>
+                    <br>
+                    {{ comment[2] }}
+                    <br>
+                    Time created: <i>{{ comment[3] }}</i>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
     </div>
 {% endblock %}
