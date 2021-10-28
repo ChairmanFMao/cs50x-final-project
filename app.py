@@ -56,7 +56,33 @@ def post():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        passwordRepeat = request.form.get("passwordRepeat")
+        checkbox = request.form.get("checkbox")
+        con = createConnection()
+        cur = con.cursor()
+        usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
+        con.commit()
+        con.close()
+        if len(username) <= 4 or len(usernameMatches) > 0:
+            return render_template("register.html", invalidUsername=True, invalidPassword=False, passwordMatch=False, invalidTerms=False)
+        if len(re.findall("[a-zA-z]", password)) == 0 or len(re.findall("[0-9]", password)) == 0 or len(password) < 5:
+            return render_template("register.html", invalidUsername=False, invalidPassword=True, passwordMatch=False, invalidTerms=False)
+        if password != passwordRepeat:
+            return render_template("register.html", invalidUsername=False, invalidPassword=False, passwordMatch=True, invalidTerms=False)
+        if checkbox is None:
+            return render_template("register.html", invalidUsername=False, invalidPassword=False, passwordMatch=False, invalidTerms=True)
+        
+        con = createConnection()
+        cur = con.cursor()
+        cur.execute("INSERT INTO users (username, hash) VALUES(?, ?)", username, generate_password_hash(password))
+        con.commit()
+        con.close()
+        return redirect("/login")
+        
+    return render_template("register.html", invalidUsername=False, invalidPassword=False, passwordMatch=False, invalidTerms=False)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

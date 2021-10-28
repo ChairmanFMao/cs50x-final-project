@@ -5,3 +5,11 @@ Please don't use hate speech or racial slurs as they will get your account remov
 
 2.
 Please only post things that are relevant to the project on this platform, don't start talking about things that are off topic.
+
+
+Tasks:
+implement the password validation using callbacks,
+complete registration page,
+complete index page to show other people's posts,
+complete post page,
+complete readme.md
