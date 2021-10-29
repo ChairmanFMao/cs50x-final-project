@@ -3,10 +3,9 @@ import re
 
 from datetime import datetime, timedelta
 from functools import wraps
-from flask import Flask, render_template, request, session, redirect, flash, jsonify
+from flask import Flask, render_template, request, session, redirect, jsonify
 from flask_session import Session
 from tempfile import mkdtemp
-from werkzeug.exceptions import abort, default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 def createConnection():
