@@ -73,7 +73,7 @@ def post():
         return redirect("/")
     return render_template("post.html", invalidTitle=False, invalidContent=False)
 
-@app.route("/viewPost", methods=["GET", "POST"])
+@app.route("/viewPost", methods=["GET"])
 def viewPost():
     post_id = request.args.get("post_id")
     if post_id is None:
@@ -86,17 +86,37 @@ def viewPost():
     if len(matchingPosts) == 0:
         return render_template("404.html"), 404
     post = matchingPosts[0]
-    if request.method == "POST":
-        commentContent = request.form.get("comment")
-        if session["user_id"] is None:
-            return render_template("viewPost.html", post=post, comments=comments, invalidUser=True, invalidComment=False)
-        if commentContent == "":
-            return render_template("viewPost.html", post=post, comments=comments, invalidUser=False, invalidComment=True)
-        con = createConnection()
-        cur = con.cursor()
-        cur.execute("INSERT INTO comments (user_id, post_id, content, dateCreated) VALUES(?, ?, ?, ?)", (session["user_id"], post_id, commentContent, datetime.now()))
-        con.commit()
-        con.close()
+    
+    con = createConnection()
+    cur = con.cursor()
+    comments = cur.execute("SELECT * FROM comments WHERE post_id = ? ORDER BY dateCreated DESC", (post_id,)).fetchall()
+    con.close()
+    return render_template("viewPost.html", post=post, comments=comments, invalidUser=False, invalidComment=False)
+
+@app.route("/viewPost", methods=["POST"])
+@login_required
+def viewPostLogin():
+    post_id = request.args.get("post_id")
+    if post_id is None:
+        return render_template("404.html"), 404
+    con = createConnection()
+    cur = con.cursor()
+    matchingPosts = cur.execute("SELECT * FROM posts WHERE post_id = ?", (post_id,)).fetchall()
+    comments = cur.execute("SELECT * FROM comments WHERE post_id = ? ORDER BY dateCreated DESC", (post_id,)).fetchall()
+    con.close()
+    if len(matchingPosts) == 0:
+        return render_template("404.html"), 404
+    post = matchingPosts[0]
+    commentContent = request.form.get("comment")
+    if session["user_id"] is None:
+        return render_template("viewPost.html", post=post, comments=comments, invalidUser=True, invalidComment=False)
+    if commentContent == "":
+        return render_template("viewPost.html", post=post, comments=comments, invalidUser=False, invalidComment=True)
+    con = createConnection()
+    cur = con.cursor()
+    cur.execute("INSERT INTO comments (user_id, post_id, content, dateCreated) VALUES(?, ?, ?, ?)", (session["user_id"], post_id, commentContent, datetime.now()))
+    con.commit()
+    con.close()
     
     con = createConnection()
     cur = con.cursor()
@@ -135,6 +155,7 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    session["user_id"] = None
     if request.method == "POST":
         con = createConnection()
         cur = con.cursor()
