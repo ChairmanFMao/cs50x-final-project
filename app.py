@@ -31,10 +31,9 @@ def after_request(response):
 
 app.jinja_env.filters["getUsername"] = getUsername
 
-app.config["SESSION_PERMANENT"] = True
+app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
 Session(app)
 
 def setUserId():
