@@ -60,13 +60,11 @@ def index():
 
 @app.route("/about")
 def about():
-    setUserId()
     return render_template("about.html")
 
 @app.route("/post", methods=["GET", "POST"])
 @login_required
 def post():
-    setUserId()
     if request.method == "POST":
         if (request.form.get("postTitle") == ""):
             return render_template("post.html", invalidTitle=True, invalidContent=False)
@@ -82,7 +80,6 @@ def post():
 
 @app.route("/viewPost", methods=["GET", "POST"])
 def viewPost():
-    setUserId()
     post_id = request.args.get("post_id")
     if post_id is None:
         return render_template("404.html"), 404
@@ -114,7 +111,6 @@ def viewPost():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    setUserId()
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -144,7 +140,6 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    setUserId()
     if request.method == "POST":
         con = createConnection()
         cur = con.cursor()
