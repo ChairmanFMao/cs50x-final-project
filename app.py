@@ -125,7 +125,7 @@ def register():
         cur = con.cursor()
         usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
         con.close()
-        if len(username) <= 4 or len(usernameMatches) > 0:
+        if len(username) < 4 or len(usernameMatches) > 0:
             return render_template("register.html", invalidUsername=True, invalidPassword=False, passwordMatch=False, invalidTerms=False)
         if len(re.findall("[a-zA-z]", password)) == 0 or len(re.findall("[0-9]", password)) == 0 or len(password) < 5:
             return render_template("register.html", invalidUsername=False, invalidPassword=True, passwordMatch=False, invalidTerms=False)
