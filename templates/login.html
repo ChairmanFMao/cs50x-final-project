@@ -51,6 +51,9 @@
             {% if invalidPassword %}
             <div class="alert alert-danger">Your password was incorrect</div>
             {% endif %}
+            {% if invalidUsername %}
+            <div class="alert alert-danger">Your username was invalid</div>
+            {% endif %}
             <button type="submit" class="btn btn-primary" id="log-in-button" data-toggle="tooltip" data-placement="bottom" title="Enter a valid username to be able to log in" disabled>Log in</button>
         </form>
     </div>

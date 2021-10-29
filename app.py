@@ -85,11 +85,16 @@ def post():
 def viewPost():
     setUserId()
     post_id = request.args.get("post_id")
+    if post_id is None:
+        return render_template("404.html"), 404
     con = createConnection()
     cur = con.cursor()
-    post = cur.execute("SELECT * FROM posts WHERE post_id = ?", (post_id,)).fetchall()[0]
+    matchingPosts = cur.execute("SELECT * FROM posts WHERE post_id = ?", (post_id,)).fetchall()
     comments = cur.execute("SELECT * FROM comments WHERE post_id = ? ORDER BY dateCreated DESC", (post_id,)).fetchall()
     con.close()
+    if len(matchingPosts) == 0:
+        return render_template("404.html"), 404
+    post = matchingPosts[0]
     if request.method == "POST":
         commentContent = request.form.get("comment")
         if session["user_id"] is None:
@@ -146,11 +151,13 @@ def login():
         cur = con.cursor()
         usernameMatches = cur.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
         con.close()
+        if len(usernameMatches) == 0:
+            return render_template("login.html", invalidPassword=False, invalidUsername=True)
         if not check_password_hash(usernameMatches[0][2], request.form.get("password")):
-            return render_template("login.html", invalidPassword=True)
+            return render_template("login.html", invalidPassword=True, invalidUsername=False)
         session["user_id"] = usernameMatches[0][0]
         return redirect("/")
-    return render_template("login.html", invalidPassword=False)
+    return render_template("login.html", invalidPassword=False, invalidUsername=False)
 
 @app.route("/validateUsername")
 def validateUsername():

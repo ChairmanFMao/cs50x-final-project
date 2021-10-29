@@ -35,6 +35,10 @@
         <div class="padFive center">
             <h1><u>{{ post[2] }}</u></h1>
         </div>
+        <p>
+            <h4 class="center">by {{ post[1]|getUsername }}, posted on {{ post[4] }}</h4>
+        </p>
+        <br>
         <p class="center" style="font-size: 20px;">
             {{ post[3] }}
         </p>
@@ -50,7 +54,7 @@
         </form>
         <br>
         {% if invalidUser %}
-            <div class="alert alert-danger">You are not logged in. Log in to post comments.</div>
+            <div class="alert alert-danger">You are not logged in. <a href="/login">Log in</a> or <a href="/register">Register</a> to post comments.</div>
         {% endif %}
         {% if invalidComment %}
             <div class="alert alert-danger">You didn't comment anything.</div>
