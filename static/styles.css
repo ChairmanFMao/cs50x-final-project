@@ -71,3 +71,11 @@ body {
 .textarea-noResize {
     resize: none;
 }
+
+.readMore {
+    color:black;
+}
+
+.readMore:hover {
+    text-decoration: underline;
+}

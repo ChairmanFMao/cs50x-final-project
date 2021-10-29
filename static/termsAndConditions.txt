@@ -17,6 +17,6 @@ PermissionError: [WinError 5] Access is denied: 'C:\\Users\\PHYSIC~1\\AppData\\L
 
 Found problem: race conditions :(
 
-Resolved using try and except in file.py
+This problem happens rarely when registering and user inputs password very quickly. 
 
 complete readme.md.
