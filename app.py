@@ -36,10 +36,6 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-def setUserId():
-    if "user_id" not in session:
-            session["user_id"] = None
-
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -51,7 +47,6 @@ def login_required(f):
 
 @app.route("/")
 def index():
-    setUserId()
     con = createConnection()
     cur = con.cursor()
     posts = cur.execute("SELECT * FROM posts ORDER BY dateCreated DESC").fetchall()
