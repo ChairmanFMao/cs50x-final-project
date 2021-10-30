@@ -91,7 +91,7 @@ def viewPost():
     cur = con.cursor()
     comments = cur.execute("SELECT * FROM comments WHERE post_id = ? ORDER BY dateCreated DESC", (post_id,)).fetchall()
     con.close()
-    return render_template("viewPost.html", post=post, comments=comments, invalidUser=False, invalidComment=False)
+    return render_template("viewPost.html", post=post, comments=comments, invalidComment=False)
 
 @app.route("/viewPost", methods=["POST"])
 @login_required
@@ -108,10 +108,8 @@ def viewPostLogin():
         return render_template("404.html"), 404
     post = matchingPosts[0]
     commentContent = request.form.get("comment")
-    if session["user_id"] is None:
-        return render_template("viewPost.html", post=post, comments=comments, invalidUser=True, invalidComment=False)
     if commentContent == "":
-        return render_template("viewPost.html", post=post, comments=comments, invalidUser=False, invalidComment=True)
+        return render_template("viewPost.html", post=post, comments=comments, invalidComment=True)
     con = createConnection()
     cur = con.cursor()
     cur.execute("INSERT INTO comments (user_id, post_id, content, dateCreated) VALUES(?, ?, ?, ?)", (session["user_id"], post_id, commentContent, datetime.now()))
@@ -122,7 +120,7 @@ def viewPostLogin():
     cur = con.cursor()
     comments = cur.execute("SELECT * FROM comments WHERE post_id = ? ORDER BY dateCreated DESC", (post_id,)).fetchall()
     con.close()
-    return render_template("viewPost.html", post=post, comments=comments, invalidUser=False, invalidComment=False)
+    return render_template("viewPost.html", post=post, comments=comments, invalidComment=False)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -186,6 +184,11 @@ def validatePassword():
         "length" : len(password) >= 5,
         "match" : password == request.args.get("rp")
     })
+
+@app.route("/logout")
+def logout():
+    session["user_id"] = None
+    return redirect("/")
 
 @app.errorhandler(404)
 def page_not_found(e):
